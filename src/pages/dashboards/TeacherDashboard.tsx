@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { BookOpen, BarChart3, Users, FileText, Download } from "lucide-react";
+import { BookOpen, BarChart3, Users, FileText, Eye } from "lucide-react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { PdfViewer } from "@/components/PdfViewer";
 
 interface Pdf { id: string; title: string; description: string | null; grade: number; file_path: string; }
 interface Attempt { id: string; score: number | null; total: number | null; submitted_at: string | null; exam: { title: string; grade: number } | null; }
@@ -12,17 +12,12 @@ const TeacherDashboard = () => {
   const { profile } = useAuth();
   const [pdfs, setPdfs] = useState<Pdf[]>([]);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
+  const [viewing, setViewing] = useState<Pdf | null>(null);
 
   useEffect(() => {
     supabase.from("content_pdfs").select("id, title, description, grade, file_path").eq("audience", "teacher").order("grade").then(({ data }) => setPdfs((data ?? []) as Pdf[]));
     supabase.from("exam_attempts").select("id, score, total, submitted_at, exam:exams(title, grade)").not("submitted_at", "is", null).order("submitted_at", { ascending: false }).limit(20).then(({ data }) => setAttempts((data ?? []) as unknown as Attempt[]));
   }, []);
-
-  const open = async (p: Pdf) => {
-    const { data, error } = await supabase.storage.from("pdfs").createSignedUrl(p.file_path, 60);
-    if (error) return toast.error(error.message);
-    window.open(data.signedUrl, "_blank");
-  };
 
   const range = profile?.class_range_min && profile?.class_range_max
     ? `Grades ${profile.class_range_min}–${profile.class_range_max}` : "Your assigned classes";
