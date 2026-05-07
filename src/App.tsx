@@ -18,6 +18,8 @@ import AdminContent from "./pages/admin/AdminContent";
 import AdminExams from "./pages/admin/AdminExams";
 import AdminExamDetail from "./pages/admin/AdminExamDetail";
 import AdminFeatures from "./pages/admin/AdminFeatures";
+import AdminAudit from "./pages/admin/AdminAudit";
+import AdminExamAnalytics from "./pages/admin/AdminExamAnalytics";
 import TeacherDashboard from "./pages/dashboards/TeacherDashboard";
 import StudentDashboard from "./pages/dashboards/StudentDashboard";
 import StudentExam from "./pages/student/StudentExam";
@@ -47,6 +49,8 @@ const App = () => (
             <Route path="/admin/exams" element={<ProtectedRoute allow={["super_admin"]}><AdminExams /></ProtectedRoute>} />
             <Route path="/admin/exams/:id" element={<ProtectedRoute allow={["super_admin"]}><AdminExamDetail /></ProtectedRoute>} />
             <Route path="/admin/features" element={<ProtectedRoute allow={["super_admin"]}><AdminFeatures /></ProtectedRoute>} />
+            <Route path="/admin/audit" element={<ProtectedRoute allow={["super_admin"]}><AdminAudit /></ProtectedRoute>} />
+            <Route path="/admin/exams/:id/analytics" element={<ProtectedRoute allow={["super_admin"]}><AdminExamAnalytics /></ProtectedRoute>} />
 
             <Route path="/teacher" element={<ProtectedRoute allow={["teacher"]}><TeacherDashboard /></ProtectedRoute>} />
             <Route path="/student" element={<ProtectedRoute allow={["student"]}><StudentDashboard /></ProtectedRoute>} />
