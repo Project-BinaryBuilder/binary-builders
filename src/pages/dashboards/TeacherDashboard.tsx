@@ -35,13 +35,13 @@ const TeacherDashboard = () => {
           {pdfs.length === 0 ? <p className="text-sm text-muted-foreground">No PDFs available for your assigned grades.</p> : (
             <div className="space-y-2">
               {pdfs.map((p) => (
-                <button key={p.id} onClick={() => open(p)} className="w-full text-left p-3 rounded-2xl border border-border/40 hover:bg-muted transition-colors flex items-center gap-3">
+                <button key={p.id} onClick={() => setViewing(p)} className="w-full text-left p-3 rounded-2xl border border-border/40 hover:bg-muted transition-colors flex items-center gap-3">
                   <FileText className="h-5 w-5 text-primary flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold truncate">{p.title} <span className="text-xs text-muted-foreground">· Grade {p.grade}</span></div>
                     {p.description && <div className="text-xs text-muted-foreground truncate">{p.description}</div>}
                   </div>
-                  <Download className="h-4 w-4 text-muted-foreground" />
+                  <Eye className="h-4 w-4 text-muted-foreground" />
                 </button>
               ))}
             </div>
