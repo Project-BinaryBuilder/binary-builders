@@ -72,6 +72,8 @@ const TeacherDashboard = () => {
           <div><h3 className="font-bold text-lg">Your Classes</h3><p className="text-sm text-muted-foreground">{range}</p></div>
         </div>
       </div>
+
+      <PdfViewer open={!!viewing} onOpenChange={(v) => !v && setViewing(null)} filePath={viewing?.file_path ?? null} title={viewing?.title ?? ""} />
     </DashboardShell>
   );
 };
