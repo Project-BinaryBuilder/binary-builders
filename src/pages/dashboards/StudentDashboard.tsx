@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, Pencil, Sparkles, FileText, Download } from "lucide-react";
+import { BookOpen, Pencil, Sparkles, FileText, Eye } from "lucide-react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { PdfViewer } from "@/components/PdfViewer";
 
 interface Pdf { id: string; title: string; description: string | null; file_path: string; }
 interface Exam { id: string; title: string; description: string | null; }
@@ -14,17 +14,12 @@ const StudentDashboard = () => {
   const { profile } = useAuth();
   const [pdfs, setPdfs] = useState<Pdf[]>([]);
   const [exams, setExams] = useState<Exam[]>([]);
+  const [viewing, setViewing] = useState<Pdf | null>(null);
 
   useEffect(() => {
     supabase.from("content_pdfs").select("id, title, description, file_path").eq("audience", "student").then(({ data }) => setPdfs((data ?? []) as Pdf[]));
     supabase.from("exams").select("id, title, description").eq("is_active", true).then(({ data }) => setExams((data ?? []) as Exam[]));
   }, []);
-
-  const open = async (p: Pdf) => {
-    const { data, error } = await supabase.storage.from("pdfs").createSignedUrl(p.file_path, 60);
-    if (error) return toast.error(error.message);
-    window.open(data.signedUrl, "_blank");
-  };
 
   return (
     <DashboardShell title={`Hi, ${profile?.full_name || profile?.username || "Student"}! 👋`} badge="Student">
@@ -62,18 +57,20 @@ const StudentDashboard = () => {
         {pdfs.length === 0 ? <p className="text-sm text-muted-foreground">No PDFs yet for your grade.</p> : (
           <div className="grid sm:grid-cols-2 gap-3">
             {pdfs.map((p) => (
-              <button key={p.id} onClick={() => open(p)} className="text-left p-4 rounded-2xl border border-border/60 hover:bg-muted transition-colors flex items-start gap-3">
+              <button key={p.id} onClick={() => setViewing(p)} className="text-left p-4 rounded-2xl border border-border/60 hover:bg-muted transition-colors flex items-start gap-3">
                 <FileText className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <div className="min-w-0 flex-1">
                   <div className="font-semibold truncate">{p.title}</div>
                   {p.description && <div className="text-xs text-muted-foreground truncate">{p.description}</div>}
                 </div>
-                <Download className="h-4 w-4 text-muted-foreground" />
+                <Eye className="h-4 w-4 text-muted-foreground" />
               </button>
             ))}
           </div>
         )}
       </div>
+
+      <PdfViewer open={!!viewing} onOpenChange={(v) => !v && setViewing(null)} filePath={viewing?.file_path ?? null} title={viewing?.title ?? ""} />
     </DashboardShell>
   );
 };

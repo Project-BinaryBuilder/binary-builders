@@ -9,7 +9,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { GRADES } from "@/lib/auth-helpers";
 import { toast } from "sonner";
-import { Trash2, Upload, FileText, Download } from "lucide-react";
+import { Trash2, Upload, FileText, Eye } from "lucide-react";
+import { PdfViewer } from "@/components/PdfViewer";
 
 type Audience = "student" | "teacher";
 interface Pdf { id: string; audience: Audience; grade: number; title: string; description: string | null; file_path: string; created_at: string; }
@@ -22,6 +23,7 @@ const AdminContent = () => {
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
+  const [viewing, setViewing] = useState<Pdf | null>(null);
 
   const load = () => supabase.from("content_pdfs").select("*").order("created_at", { ascending: false }).then(({ data }) => setItems((data ?? []) as Pdf[]));
   useEffect(() => { load(); }, []);
@@ -54,11 +56,7 @@ const AdminContent = () => {
     toast.success("Deleted"); load();
   };
 
-  const download = async (p: Pdf) => {
-    const { data, error } = await supabase.storage.from("pdfs").createSignedUrl(p.file_path, 60);
-    if (error) return toast.error(error.message);
-    window.open(data.signedUrl, "_blank");
-  };
+  const view = (p: Pdf) => setViewing(p);
 
   return (
     <AdminLayout title="Content Library">
@@ -104,7 +102,7 @@ const AdminContent = () => {
                         </div>
                       </div>
                       <div className="flex gap-1 flex-shrink-0">
-                        <Button size="icon" variant="ghost" onClick={() => download(p)}><Download className="h-4 w-4" /></Button>
+                        <Button size="icon" variant="ghost" onClick={() => view(p)}><Eye className="h-4 w-4" /></Button>
                         <Button size="icon" variant="ghost" onClick={() => remove(p)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                       </div>
                     </div>
@@ -115,6 +113,8 @@ const AdminContent = () => {
           </TabsContent>
         ))}
       </Tabs>
+
+      <PdfViewer open={!!viewing} onOpenChange={(v) => !v && setViewing(null)} filePath={viewing?.file_path ?? null} title={viewing?.title ?? ""} />
     </AdminLayout>
   );
 };

@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { GRADES } from "@/lib/auth-helpers";
 import { toast } from "sonner";
-import { Plus, Trash2, Settings2, Play, Square } from "lucide-react";
+import { Plus, Trash2, Settings2, Play, Square, BarChart3 } from "lucide-react";
 
 interface Exam { id: string; title: string; description: string | null; grade: number; is_active: boolean; created_at: string; }
 
@@ -89,6 +89,7 @@ const AdminExams = () => {
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               <Button asChild size="sm" variant="outline" className="rounded-full"><Link to={`/admin/exams/${ex.id}`}><Settings2 className="h-4 w-4 mr-1" /> Manage</Link></Button>
+              <Button asChild size="sm" variant="outline" className="rounded-full"><Link to={`/admin/exams/${ex.id}/analytics`}><BarChart3 className="h-4 w-4 mr-1" /> Analytics</Link></Button>
               <Button size="sm" onClick={() => toggle(ex)} className="rounded-full" variant={ex.is_active ? "destructive" : "default"}>
                 {ex.is_active ? <><Square className="h-4 w-4 mr-1" /> End</> : <><Play className="h-4 w-4 mr-1" /> Start</>}
               </Button>

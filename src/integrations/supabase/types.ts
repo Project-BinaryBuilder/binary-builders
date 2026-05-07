@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_username: string | null
+          created_at: string
+          entity: string
+          entity_id: string | null
+          id: string
+          metadata: Json | null
+          summary: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_username?: string | null
+          created_at?: string
+          entity: string
+          entity_id?: string | null
+          id?: string
+          metadata?: Json | null
+          summary?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_username?: string | null
+          created_at?: string
+          entity?: string
+          entity_id?: string | null
+          id?: string
+          metadata?: Json | null
+          summary?: string | null
+        }
+        Relationships: []
+      }
       content_pdfs: {
         Row: {
           audience: Database["public"]["Enums"]["pdf_audience"]
