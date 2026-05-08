@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Binary, LogOut, Users, FileText, GraduationCap, Bell, CalendarDays, Settings, LayoutDashboard, ScrollText } from "lucide-react";
+import { Binary, LogOut, Users, FileText, GraduationCap, Bell, CalendarDays, Settings, LayoutDashboard, ScrollText, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,7 @@ const items = [
   { to: "/admin/users", icon: Users, label: "Users" },
   { to: "/admin/content", icon: FileText, label: "Content Library" },
   { to: "/admin/exams", icon: GraduationCap, label: "Examinations" },
+  { to: "/admin/analytics", icon: BarChart3, label: "Analytics" },
   { to: "/admin/notices", icon: Bell, label: "Notices" },
   { to: "/admin/events", icon: CalendarDays, label: "Events" },
   { to: "/admin/audit", icon: ScrollText, label: "Audit Log" },
